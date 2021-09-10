@@ -6,8 +6,16 @@ def premask(img):
     hi, wi, ch = img.shape
     img1 = np.zeros((hi, wi, ch), np.uint8)
 
-    mask1 = np.array([[-1, -1, -1], [0, 0, 0], [1, 1, 1]])
-    mask2 = np.array([[-1, 0, 1], [-1, 0, 1], [-1, 0, 1]])
+    mask1 = np.array([
+        [-1, -1, -1],
+        [0, 0, 0],
+        [1, 1, 1]
+    ])
+    mask2 = np.array([
+        [-1, 0, 1],
+        [-1, 0, 1],
+        [-1, 0, 1]
+    ])
 
     if ch == 1:
         for h in range(1, hi-1):
@@ -16,8 +24,8 @@ def premask(img):
                 bbs = 0
                 for i in range(-1, 2):
                     for j in range(-1, 2):
-                        aas = aas+img[h+i, w+j]*mask1[i+1, j+1]
-                        bbs = bbs+img[h+i, w+j]*mask2[i+1, j+1]
+                        aas = aas+img[h+i, w+j, 0]*mask1[i+1, j+1]
+                        bbs = bbs+img[h+i, w+j, 0]*mask2[i+1, j+1]
                 mag = np.sqrt(np.power(aas, 2)+np.power(bbs, 2))
                 if mag > 255:
                     img1[h, w] = 255
@@ -30,6 +38,9 @@ def premask(img):
         for wa in range(0, wi):
             img1[0][wa] = img1[1][wa]
             img1[hi-1][wa] = img1[hi-2][wa]
+        for ih in range(0, hi):
+            for iw in range(0, wi):
+                img[ih][iw] = img1[ih][iw]
 
     if ch == 3:
         for h in range(1, hi-1):
