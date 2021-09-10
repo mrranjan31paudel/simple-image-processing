@@ -263,23 +263,7 @@ def relod():
 
 def save():
     if design.fileName != "":
-        import image as img1
-        hh, ww, cc = design.img.shape
-        img1 = np.zeros((hh, ww, cc), np.uint8)
-        tup = (ww, hh)
-        if cc == 1:
-            for i in range(0, hh):
-                for j in range(0, ww):
-                    img1[i][j] = design.img[i][j]
-            ph = Image.frombytes("L", tup, img1.tobytes())
-        if cc == 3:
-            for i in range(0, hh):
-                for j in range(0, ww):
-                    img1[i][j][0] = design.img[i][j][2]
-                    img1[i][j][1] = design.img[i][j][1]
-                    img1[i][j][2] = design.img[i][j][0]
-            ph = Image.frombytes("RGB", tup, img1.tobytes())
-
+        ph = prepare_display_image(design.img)
         f = filedialog.asksaveasfile(mode='wb')
         if f:
             ph.save(f)
@@ -301,18 +285,9 @@ def grayconv():
         hi, wi, ch = design.img.shape
         tup = (wi, hi)
         pi = Image.frombytes("L", tup, design.img.tobytes())
-        ph = ImageTk.PhotoImage(pi)
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, image=ph)
-        design.L.image = ph
-        design.L.pack()
+        update_display_image(pi)
     else:
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, bg="white", fg="red",
-                            text="Please select an image to proceed!")
-        design.L.pack()
+        update_for_no_image()
     design.relcount += 1
 
 
@@ -327,582 +302,189 @@ def bnrize():
         hi, wi, ch = design.img.shape
         tup = (wi, hi)
         pi = Image.frombytes("L", tup, design.img.tobytes())
-        ph = ImageTk.PhotoImage(pi)
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, image=ph)
-        design.L.image = ph
-        design.L.pack()
+        update_display_image(pi)
     else:
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, bg="white", fg="red",
-                            text="Please select an image to proceed!")
-        design.L.pack()
+        update_for_no_image()
     design.relcount += 1
 
 
 def median():
     if design.fileName != "":
         import medianfil
-        import image as img1
+
         medianfil.noisered(design.img)
-        hi, wi, ch = design.img.shape
-        img1 = np.zeros((hi, wi, ch), np.uint8)
-        tup = (wi, hi)
-        if ch == 3:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j][0] = design.img[i][j][2]
-                    img1[i][j][1] = design.img[i][j][1]
-                    img1[i][j][2] = design.img[i][j][0]
-            pi = Image.frombytes("RGB", tup, img1.tobytes())
-        else:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j] = design.img[i][j]
-            pi = Image.frombytes("L", tup, img1.tobytes())
-        ph = ImageTk.PhotoImage(pi)
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, image=ph)
-        design.L.image = ph
-        design.L.pack()
+        pi = prepare_display_image(design.img)
+        update_display_image(pi)
     else:
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, bg="white", fg="red",
-                            text="Please select an image to proceed!")
-        design.L.pack()
+        update_for_no_image()
     design.relcount += 1
 
 
 def mean():
     if design.fileName != "":
         import meanfil
-        import image as img1
+
         meanfil.meanfiltering(design.img)
-        hi, wi, ch = design.img.shape
-        img1 = np.zeros((hi, wi, ch), np.uint8)
-        tup = (wi, hi)
-        if ch == 3:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j][0] = design.img[i][j][2]
-                    img1[i][j][1] = design.img[i][j][1]
-                    img1[i][j][2] = design.img[i][j][0]
-            pi = Image.frombytes("RGB", tup, img1.tobytes())
-        else:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j] = design.img[i][j]
-            pi = Image.frombytes("L", tup, img1.tobytes())
-        ph = ImageTk.PhotoImage(pi)
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, image=ph)
-        design.L.image = ph
-        design.L.pack()
+        pi = prepare_display_image(design.img)
+        update_display_image(pi)
     else:
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, bg="white", fg="red",
-                            text="Please select an image to proceed!")
-        design.L.pack()
+        update_for_no_image()
     design.relcount += 1
 
 
 def wtmean():
     if design.fileName != "":
         import weightmeanfil
-        import image as img1
+
         weightmeanfil.wtmeanfiltering(design.img)
-        hi, wi, ch = design.img.shape
-        img1 = np.zeros((hi, wi, ch), np.uint8)
-        tup = (wi, hi)
-        if ch == 3:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j][0] = design.img[i][j][2]
-                    img1[i][j][1] = design.img[i][j][1]
-                    img1[i][j][2] = design.img[i][j][0]
-            pi = Image.frombytes("RGB", tup, img1.tobytes())
-        else:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j] = design.img[i][j]
-            pi = Image.frombytes("L", tup, img1.tobytes())
-        ph = ImageTk.PhotoImage(pi)
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, image=ph)
-        design.L.image = ph
-        design.L.pack()
+        pi = prepare_display_image(design.img)
+        update_display_image(pi)
     else:
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, bg="white", fg="red",
-                            text="Please select an image to proceed!")
-        design.L.pack()
+        update_for_no_image()
     design.relcount += 1
 
 
 def maxi():
     if design.fileName != "":
         import maxfil
-        import image as img1
+
         maxfil.maxfiltering(design.img)
-        hi, wi, ch = design.img.shape
-        img1 = np.zeros((hi, wi, ch), np.uint8)
-        tup = (wi, hi)
-        if ch == 3:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j][0] = design.img[i][j][2]
-                    img1[i][j][1] = design.img[i][j][1]
-                    img1[i][j][2] = design.img[i][j][0]
-            pi = Image.frombytes("RGB", tup, img1.tobytes())
-        else:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j] = design.img[i][j]
-            pi = Image.frombytes("L", tup, img1.tobytes())
-        ph = ImageTk.PhotoImage(pi)
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, image=ph)
-        design.L.image = ph
-        design.L.pack()
+        pi = prepare_display_image(design.img)
+        update_display_image(pi)
     else:
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, bg="white", fg="red",
-                            text="Please select an image to proceed!")
-        design.L.pack()
+        update_for_no_image()
     design.relcount += 1
 
 
 def mini():
     if design.fileName != "":
         import minfil
-        import image as img1
+
         minfil.minfiltering(design.img)
-        hi, wi, ch = design.img.shape
-        img1 = np.zeros((hi, wi, ch), np.uint8)
-        tup = (wi, hi)
-        if ch == 3:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j][0] = design.img[i][j][2]
-                    img1[i][j][1] = design.img[i][j][1]
-                    img1[i][j][2] = design.img[i][j][0]
-            pi = Image.frombytes("RGB", tup, img1.tobytes())
-        else:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j] = design.img[i][j]
-            pi = Image.frombytes("L", tup, img1.tobytes())
-        ph = ImageTk.PhotoImage(pi)
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, image=ph)
-        design.L.image = ph
-        design.L.pack()
+        pi = prepare_display_image(design.img)
+        update_display_image(pi)
     else:
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, bg="white", fg="red",
-                            text="Please select an image to proceed!")
-        design.L.pack()
+        update_for_no_image()
     design.relcount += 1
 
 
 def gauss():
     if design.fileName != "":
         import gaussfil
-        import image as img1
+
         gaussfil.gaussfiltering(design.img)
-        hi, wi, ch = design.img.shape
-        img1 = np.zeros((hi, wi, ch), np.uint8)
-        tup = (wi, hi)
-        if ch == 3:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j][0] = design.img[i][j][2]
-                    img1[i][j][1] = design.img[i][j][1]
-                    img1[i][j][2] = design.img[i][j][0]
-            pi = Image.frombytes("RGB", tup, img1.tobytes())
-        else:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j] = design.img[i][j]
-            pi = Image.frombytes("L", tup, img1.tobytes())
-        ph = ImageTk.PhotoImage(pi)
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, image=ph)
-        design.L.image = ph
-        design.L.pack()
+        pi = prepare_display_image(design.img)
+        update_display_image(pi)
     else:
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, bg="white", fg="red",
-                            text="Please select an image to proceed!")
-        design.L.pack()
+        update_for_no_image()
     design.relcount += 1
 
 
 def prewit():
     if design.fileName != "":
         import prewittmask as prewt
-        import image as img1
+
         prewt.premask(design.img)
-        hi, wi, ch = design.img.shape
-        img1 = np.zeros((hi, wi, ch), np.uint8)
-        tup = (wi, hi)
-        if ch == 3:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j][0] = design.img[i][j][2]
-                    img1[i][j][1] = design.img[i][j][1]
-                    img1[i][j][2] = design.img[i][j][0]
-            pi = Image.frombytes("RGB", tup, img1.tobytes())
-        else:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j] = design.img[i][j]
-            pi = Image.frombytes("L", tup, img1.tobytes())
-        ph = ImageTk.PhotoImage(pi)
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, image=ph)
-        design.L.image = ph
-        design.L.pack()
+        pi = prepare_display_image(design.img)
+        update_display_image(pi)
     else:
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, bg="white", fg="red",
-                            text="Please select an image to proceed!")
-        design.L.pack()
+        update_for_no_image()
     design.relcount += 1
 
 
 def sobel():
     if design.fileName != "":
         import sobelmask as sobl
-        import image as img1
+
         sobl.sobmask(design.img)
-        hi, wi, ch = design.img.shape
-        img1 = np.zeros((hi, wi, ch), np.uint8)
-        tup = (wi, hi)
-        if ch == 3:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j][0] = design.img[i][j][2]
-                    img1[i][j][1] = design.img[i][j][1]
-                    img1[i][j][2] = design.img[i][j][0]
-            pi = Image.frombytes("RGB", tup, img1.tobytes())
-        else:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j] = design.img[i][j]
-            pi = Image.frombytes("L", tup, img1.tobytes())
-        ph = ImageTk.PhotoImage(pi)
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, image=ph)
-        design.L.image = ph
-        design.L.pack()
+        pi = prepare_display_image(design.img)
+        update_display_image(pi)
     else:
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, bg="white", fg="red",
-                            text="Please select an image to proceed!")
-        design.L.pack()
+        update_for_no_image()
     design.relcount += 1
 
 
 def lapla():
     if design.fileName != "":
         import laplacianmask
-        import image as img1
+
         laplacianmask.lapmask(design.img)
-        hi, wi, ch = design.img.shape
-        img1 = np.zeros((hi, wi, ch), np.uint8)
-        tup = (wi, hi)
-        if ch == 3:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j][0] = design.img[i][j][2]
-                    img1[i][j][1] = design.img[i][j][1]
-                    img1[i][j][2] = design.img[i][j][0]
-            pi = Image.frombytes("RGB", tup, img1.tobytes())
-        else:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j] = design.img[i][j]
-            pi = Image.frombytes("L", tup, img1.tobytes())
-        ph = ImageTk.PhotoImage(pi)
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, image=ph)
-        design.L.image = ph
-        design.L.pack()
+        pi = prepare_display_image(design.img)
+        update_display_image(pi)
     else:
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, bg="white", fg="red",
-                            text="Please select an image to proceed!")
-        design.L.pack()
+        update_for_no_image()
     design.relcount += 1
 
 
 def neget():
     if design.fileName != "":
         import negativeen as neg
-        import image as img1
+
         neg.negation(design.img)
-        hi, wi, ch = design.img.shape
-        img1 = np.zeros((hi, wi, ch), np.uint8)
-        tup = (wi, hi)
-        if ch == 3:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j][0] = design.img[i][j][2]
-                    img1[i][j][1] = design.img[i][j][1]
-                    img1[i][j][2] = design.img[i][j][0]
-            pi = Image.frombytes("RGB", tup, img1.tobytes())
-        else:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j] = design.img[i][j]
-            pi = Image.frombytes("L", tup, img1.tobytes())
-        ph = ImageTk.PhotoImage(pi)
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, image=ph)
-        design.L.image = ph
-        design.L.pack()
+        pi = prepare_display_image(design.img)
+        update_display_image(pi)
     else:
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, bg="white", fg="red",
-                            text="Please select an image to proceed!")
-        design.L.pack()
+        update_for_no_image()
     design.relcount += 1
 
 
 def logtr():
     if design.fileName != "":
         import logger
-        import image as img1
+
         logger.logging(design.img)
-        hi, wi, ch = design.img.shape
-        img1 = np.zeros((hi, wi, ch), np.uint8)
-        tup = (wi, hi)
-        if ch == 3:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j][0] = design.img[i][j][2]
-                    img1[i][j][1] = design.img[i][j][1]
-                    img1[i][j][2] = design.img[i][j][0]
-            pi = Image.frombytes("RGB", tup, img1.tobytes())
-        else:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j] = design.img[i][j]
-            pi = Image.frombytes("L", tup, img1.tobytes())
-        ph = ImageTk.PhotoImage(pi)
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, image=ph)
-        design.L.image = ph
-        design.L.pack()
+        pi = prepare_display_image(design.img)
+        update_display_image(pi)
     else:
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, bg="white", fg="red",
-                            text="Please select an image to proceed!")
-        design.L.pack()
+        update_for_no_image()
     design.relcount += 1
 
 
 def powe():
     if design.fileName != "":
         import powertr
-        import image as img1
+
         powertr.powring(design.img)
-        hi, wi, ch = design.img.shape
-        img1 = np.zeros((hi, wi, ch), np.uint8)
-        tup = (wi, hi)
-        if ch == 3:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j][0] = design.img[i][j][2]
-                    img1[i][j][1] = design.img[i][j][1]
-                    img1[i][j][2] = design.img[i][j][0]
-            pi = Image.frombytes("RGB", tup, img1.tobytes())
-        else:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j] = design.img[i][j]
-            pi = Image.frombytes("L", tup, img1.tobytes())
-        ph = ImageTk.PhotoImage(pi)
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, image=ph)
-        design.L.image = ph
-        design.L.pack()
+        pi = prepare_display_image(design.img)
+        update_display_image(pi)
     else:
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, bg="white", fg="red",
-                            text="Please select an image to proceed!")
-        design.L.pack()
+        update_for_no_image()
     design.relcount += 1
 
 
 def contstrt():
     if design.fileName != "":
         import contrstr
-        import image as img1
+
         contrstr.normalization(design.img)
-        hi, wi, ch = design.img.shape
-        img1 = np.zeros((hi, wi, ch), np.uint8)
-        tup = (wi, hi)
-        if ch == 1:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j] = design.img[i][j]
-            pi = Image.frombytes("L", tup, img1.tobytes())
-        else:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j][0] = design.img[i][j][2]
-                    img1[i][j][1] = design.img[i][j][1]
-                    img1[i][j][2] = design.img[i][j][0]
-            pi = Image.frombytes("RGB", tup, img1.tobytes())
-
-        ph = ImageTk.PhotoImage(pi)
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, image=ph)
-        design.L.image = ph
-        design.L.pack()
+        pi = prepare_display_image(design.img)
+        update_display_image(pi)
     else:
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, bg="white", fg="red",
-                            text="Please select an image to proceed!")
-        design.L.pack()
-    design.relcount += 1
-
-
-def contstrt():
-    if design.fileName != "":
-        import contrstr
-        import image as img1
-        contrstr.normalization(design.img)
-        hi, wi, ch = design.img.shape
-        img1 = np.zeros((hi, wi, ch), np.uint8)
-        tup = (wi, hi)
-        if ch == 1:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j] = design.img[i][j]
-            pi = Image.frombytes("L", tup, img1.tobytes())
-        else:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j][0] = design.img[i][j][2]
-                    img1[i][j][1] = design.img[i][j][1]
-                    img1[i][j][2] = design.img[i][j][0]
-            pi = Image.frombytes("RGB", tup, img1.tobytes())
-
-        ph = ImageTk.PhotoImage(pi)
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, image=ph)
-        design.L.image = ph
-        design.L.pack()
-    else:
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, bg="white", fg="red",
-                            text="Please select an image to proceed!")
-        design.L.pack()
+        update_for_no_image()
     design.relcount += 1
 
 
 def sharpe():
     if design.fileName != "":
         import sharpen
-        import image as img1
-        sharpen.sharpening(design.img)
-        hi, wi, ch = design.img.shape
-        img1 = np.zeros((hi, wi, ch), np.uint8)
-        tup = (wi, hi)
-        if ch == 1:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j] = design.img[i][j]
-            pi = Image.frombytes("L", tup, img1.tobytes())
-        else:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j][0] = design.img[i][j][2]
-                    img1[i][j][1] = design.img[i][j][1]
-                    img1[i][j][2] = design.img[i][j][0]
-            pi = Image.frombytes("RGB", tup, img1.tobytes())
 
-        ph = ImageTk.PhotoImage(pi)
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, image=ph)
-        design.L.image = ph
-        design.L.pack()
+        sharpen.sharpening(design.img)
+        pi = prepare_display_image(design.img)
+        update_display_image(pi)
     else:
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, bg="white", fg="red",
-                            text="Please select an image to proceed!")
-        design.L.pack()
+        update_for_no_image()
     design.relcount += 1
 
 
 def clipp():
     if design.fileName != "":
         import clipper
-        import image as img1
-        clipper.clipping(design.img)
-        hi, wi, ch = design.img.shape
-        img1 = np.zeros((hi, wi, ch), np.uint8)
-        tup = (wi, hi)
-        if ch == 1:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j] = design.img[i][j]
-            pi = Image.frombytes("L", tup, img1.tobytes())
-        else:
-            for i in range(0, hi):
-                for j in range(0, wi):
-                    img1[i][j][0] = design.img[i][j][2]
-                    img1[i][j][1] = design.img[i][j][1]
-                    img1[i][j][2] = design.img[i][j][0]
-            pi = Image.frombytes("RGB", tup, img1.tobytes())
 
-        ph = ImageTk.PhotoImage(pi)
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, image=ph)
-        design.L.image = ph
-        design.L.pack()
+        clipper.clipping(design.img)
+        pi = prepare_display_image(design.img)
+        update_display_image(pi)
     else:
-        design.L.pack_forget()
-        design.frame1.update()
-        design.L = tk.Label(design.frame1, bg="white", fg="red",
-                            text="Please select an image to proceed!")
-        design.L.pack()
+        update_for_no_image()
     design.relcount += 1
 
 
@@ -958,5 +540,43 @@ def resize_img(img, widthx, heighty):
     return img
 
 
-design_fun()
-newWin.mainloop()
+def prepare_display_image(img):
+    hi, wi, ch = img.shape
+    img1 = np.zeros((hi, wi, ch), np.uint8)
+    mode = "L"
+
+    if ch == 1:
+        for i in range(0, hi):
+            for j in range(0, wi):
+                img1[i][j] = img[i][j]
+    else:
+        mode = "RGB"
+        for i in range(0, hi):
+            for j in range(0, wi):
+                img1[i][j][0] = img[i][j][2]
+                img1[i][j][1] = img[i][j][1]
+                img1[i][j][2] = img[i][j][0]
+
+    return Image.frombytes(mode, (wi, hi), img1.tobytes())
+
+
+def update_display_image(pi):
+    ph = ImageTk.PhotoImage(pi)
+    design.L.pack_forget()
+    design.frame1.update()
+    design.L = tk.Label(design.frame1, image=ph)
+    design.L.image = ph
+    design.L.pack()
+
+
+def update_for_no_image():
+    design.L.pack_forget()
+    design.frame1.update()
+    design.L = tk.Label(design.frame1, bg="white", fg="red",
+                        text="Please select an image to proceed!")
+    design.L.pack()
+
+
+if __name__ == "__main__":
+    design_fun()
+    newWin.mainloop()
