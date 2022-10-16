@@ -5,16 +5,11 @@ def wtmeanfiltering(img):
     import image as img1
     hi, wi, ch = img.shape
     img1 = np.zeros((hi, wi, ch), np.uint8)
-    fil = np.zeros((3, 3, 1), np.uint8)
-    fil[0, 0] = 1
-    fil[0, 1] = 2
-    fil[0, 2] = 1
-    fil[1, 0] = 2
-    fil[1, 1] = 4
-    fil[1, 2] = 2
-    fil[2, 0] = 1
-    fil[2, 1] = 2
-    fil[2, 2] = 1
+    fil = [
+        [1, 2, 1],
+        [2, 4, 2],
+        [1, 2, 1]
+    ]
 
     if ch == 1:
         for h in range(1, hi-1):
@@ -22,10 +17,8 @@ def wtmeanfiltering(img):
                 q = []
                 for i in range(-1, 2):
                     for j in range(-1, 2):
-                        aas = np.mean(img[h+i, w+j])*fil[i+1, j+1]
-                        q.append(aas)
-                value = int(np.sum(q)/16)
-                img1[h, w] = value
+                        q.append(int(img[h+i, w+j, 0])*fil[i+1][j+1])
+                img1[h, w] = int(np.sum(q)/16)
                 b = w
             a = h
         for ha in range(1, hi-1):
@@ -46,18 +39,12 @@ def wtmeanfiltering(img):
                 q2 = []
                 for i in range(-1, 2):
                     for j in range(-1, 2):
-                        aas0 = img[h+i, w+j, 0]*fil[i+1, j+1]
-                        q0.append(aas0)
-                        aas1 = img[h+i, w+j, 1]*fil[i+1, j+1]
-                        q1.append(aas1)
-                        aas2 = img[h+i, w+j, 2]*fil[i+1, j+1]
-                        q2.append(aas2)
-                value0 = int(np.sum(q0)/16)
-                value1 = int(np.sum(q1)/16)
-                value2 = int(np.sum(q2)/16)
-                img1[h, w, 0] = value0
-                img1[h, w, 1] = value1
-                img1[h, w, 2] = value2
+                        q0.append(int(img[h+i, w+j, 0])*fil[i+1][j+1])
+                        q1.append(int(img[h+i, w+j, 1])*fil[i+1][j+1])
+                        q2.append(int(img[h+i, w+j, 2])*fil[i+1][j+1])
+                img1[h, w, 0] = int(np.sum(q0)/16)
+                img1[h, w, 1] = int(np.sum(q1)/16)
+                img1[h, w, 2] = int(np.sum(q2)/16)
 
         for ha in range(1, hi-1):
             img1[ha][0][0] = img1[ha][1][0]
